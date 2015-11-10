@@ -1,0 +1,47 @@
+<ion-view view-title="Sms" hide-nav-bar="false">
+
+  <ion-nav-buttons side="right">
+    <button class="button button-icon button-clear ion-gear-a" ng-click="showParameterModal()">
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content class="padding">
+
+    <ion-list show-delete="false" show-reorder="false" can-swipe="false">
+
+      <li class="item item-checkbox">
+        <label class="checkbox">
+          <input type="checkbox" ng-model="form.isBureau" ng-disabled="contactsASM.length===0" ng-click="changeAdherentState()">
+        </label>
+        Bureau ({{membersASM.length}})
+      </li>
+
+      <li class="item item-checkbox">
+        <label class="checkbox">
+          <input type="checkbox" ng-model="form.isAdherent" ng-disabled="contactsASM.length===0" ng-click="changeBureauState()">
+        </label>
+        Adhérents ({{contactsASM.length}})
+      </li>
+
+      <div class="item item-assertive text-center" ng-if="!networkOnLine">
+        <strong>Absence de réseau !</strong>
+      </div>
+
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Message SMS <i>({{form.message.length}}/{{SMS_THRESHOLD}})</i></span>
+          <textarea ng-model="form.message" type="text" rows="3"
+                    placeholder="Corps du message à envoyer par SMS"
+                    ng-maxlength="160" maxlength="160"></textarea>
+      </label>
+
+      <div class="item">
+        <button ng-disabled="isButtonDisabled()" ng-click="sendSMS()"
+                class="button button-block button-positive">Envoyer le SMS <i class="icon ion-android-textsms"></i>
+        </button>
+      </div>
+
+    </ion-list>
+
+
+  </ion-content>
+</ion-view>

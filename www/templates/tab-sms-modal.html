@@ -1,0 +1,23 @@
+<ion-modal-view>
+
+  <ion-header-bar class="bar-positive">
+    <h1 class="title">Envois des SMS</h1>
+  </ion-header-bar>
+
+  <ion-content class="padding">
+
+    <ion-list>
+
+      <ion-item class="item item-divider">
+        {{SMSSentTo.length}} envoi(s) à traiter
+      </ion-item>
+
+      <ion-item ng-repeat="phoneNumers in SMSSentTo">
+        Envoi paquet SMS N°{{$index + 1 }} <span ng-if="$first"><ion-spinner icon="bubbles" class="spinner-positive"></ion-spinner></span>
+      </ion-item>
+
+    </ion-list>
+
+  </ion-content>
+
+</ion-modal-view>

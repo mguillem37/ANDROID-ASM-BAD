@@ -1,0 +1,27 @@
+<ion-view view-title="Sms" hide-nav-bar="false">
+  <ion-content>
+
+    <ion-refresher pulling-text="Relâcher pour actualiser..." on-refresh="refreshCountry()">
+    </ion-refresher>
+    <div class="list list-inset">
+      <label class="item item-input">
+        <i class="icon ion-search placeholder-icon"></i>
+        <input type="text" placeholder="Nom adhérent..." ng-model="searchCriteria">
+      </label>
+    </div>
+    <ion-list>
+      <ion-item collection-repeat="data in filteredData = (datas | filter:{displayName: searchCriteria} | orderBy: displayName)" class="item-remove-animate item-avatar item-icon-right">
+        <!--        <img data-ng-src="data:image/png;base64,{{data.image}}" data-err-src="images/png/avatar.png"/>
+                <h2>{{data.pays}}</h2>-->
+        <div>
+          <h2>{{data.displayName}}({{data.id}})</h2>
+          <h3>{{data.name.familyName}} {{data.phoneNumbers.length}} tél.</h3>
+          <h3>{{data.phoneNumbers[0].value}}</h3>
+          <h3 ng-show="data.phoneNumbers[1]">{{data.phoneNumbers[1].value}}</h3>
+          <h3 ng-show="data.phoneNumbers[2]">{{data.phoneNumbers[2].value}}</h3>
+          <i class="icon ion-chevron-right icon-accessory"></i>
+        </div>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

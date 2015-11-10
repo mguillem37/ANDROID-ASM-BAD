@@ -1,0 +1,71 @@
+<ion-view view-title="Synthèse">
+  <ion-content class="padding">
+
+    <div class="list card">
+
+      <div class="item item-divider">
+        <i class="icon ion-ios-person"></i> Les Adhérents ASM Badminton
+      </div>
+
+      <div class="item item-body">
+
+        <div ng-if="contactsASM.length===0">Aucun adhérent dans les contacts</div>
+        <div ng-if="contactsASM.length > 0"><b>{{contactsASM.length}}</b> adhérents ASM Badminton ont été trouvés dans les contacts !</div>
+
+      </div>
+
+    </div>
+
+    <div class="list card">
+
+      <div class="item item-divider"><i class="icon ion-ios-paw"></i> Les membres du bureau</div>
+      <div class="item item-body">
+        <div ng-if="membersASM.length===0">Aucun membre du bureau dans les contacts</div>
+        <div ng-if="membersASM.length > 0">
+          <p>
+            <b>{{membersASM.length}}</b> membres du bureau :
+            <span ng-repeat="aMember in filteredMembersASM =(membersASM | orderBy: name.givenName)">{{aMember.name.givenName}} </span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="list card" ng-if="contactsASM.length > 0">
+
+      <div class="item item-divider"><i class="icon ion-stats-bars"></i> Quelques Statistiques</div>
+      <div class="item item-body">
+
+        <div>
+          <ion-list>
+            <ion-item>
+              <i class="icon ion-male"></i> 63% - <i class="icon ion-female"></i> 37%
+            </ion-item>
+            <ion-item>
+              <i class="icon ion-trophy"></i> 30% - <i class="icon ion-tshirt"></i> 70%
+            </ion-item>
+            <ion-item>
+              <ul>
+                <li><i class="icon ion-egg"></i> 30 <strong>Poussin</strong></li>
+                <li><i class="icon ion-egg"></i> 30 <strong>Benjamin</strong></li>
+                <li><i class="icon ion-ios-game-controller-a"></i> 30 <strong>Minime</strong></li>
+              </ul>
+            </ion-item>
+            <ion-item>
+              <ul>
+                <li><i class="icon ion-ios-game-controller-b"></i> 10 <strong>Junior</strong></li>
+                <li><i class="icon ion-pizza"></i> 15 <strong>Senior</strong></li>
+              </ul>
+            </ion-item>
+            <ion-item>
+              <ul>
+                <li><i class="icon ion-ios-glasses-outline"></i> 50 <strong>Vétéran 1</strong></li>
+                <li><i class="icon ion-ios-pint"></i> 20 <strong>Vétéran 2</strong></li>
+                <li><i class="icon ion-ios-pint-outline"></i> 10 <strong>Vétéran 3</strong></li>
+              </ul>
+            </ion-item>
+          </ion-list>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
