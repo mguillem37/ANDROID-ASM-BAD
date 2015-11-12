@@ -156,7 +156,7 @@ angular.module('starter.services', [])
       }
 
       newContact.organizations = [{
-        "name": (contact.member ? "ASM Badminton Bureau" : "ASM Badminton " + contact.category.toUpperCase()),
+        "name": (contact.member ? "ASM Badminton Bureau" : "ASM Badminton"),
         "title": contact.organizations,
         "pref": true
       }];
