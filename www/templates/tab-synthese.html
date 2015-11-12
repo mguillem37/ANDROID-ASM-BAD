@@ -24,13 +24,13 @@
         <div ng-if="membersASM.length > 0">
           <p>
             <b>{{membersASM.length}}</b> membres du bureau :
-            <span ng-repeat="aMember in filteredMembersASM =(membersASM | orderBy: name.givenName)">{{aMember.name.givenName}} </span>
+            <span ng-repeat="aMember in filteredMembersASM = (membersASM | orderBy:name.givenName)">{{aMember.name.givenName}} </span>
           </p>
         </div>
       </div>
     </div>
 
-    <div class="list card" ng-if="contactsASM.length > 0">
+    <!--div class="list card" ng-if="contactsASM.length > 0">
 
       <div class="item item-divider"><i class="icon ion-stats-bars"></i> Quelques Statistiques</div>
       <div class="item item-body">
@@ -66,6 +66,6 @@
           </ion-list>
         </div>
       </div>
-    </div>
+    </div -->
   </ion-content>
 </ion-view>

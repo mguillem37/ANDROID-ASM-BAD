@@ -11,14 +11,22 @@
 
       <li class="item item-checkbox">
         <label class="checkbox">
-          <input type="checkbox" ng-model="form.isBureau" ng-disabled="contactsASM.length===0" ng-click="changeAdherentState()">
-        </label>
-        Bureau ({{membersASM.length}})
+          <input type="checkbox" ng-model="form.isBureau" ng-disabled="contactsASM.length===0"
+                 ng-click="changeAdherentStateIfIsMember()">
+        </label>Bureau ({{membersASM.length}})
       </li>
+
+      <!-- li class="item item-checkbox">
+        <label class="checkbox">
+          <input type="checkbox" ng-model="form.isBureau" ng-disabled="contactsASM.length===0"
+                 ng-click="changeAdherentStateIfIsMinibad()">
+        </label>Minibad
+      </li -->
 
       <li class="item item-checkbox">
         <label class="checkbox">
-          <input type="checkbox" ng-model="form.isAdherent" ng-disabled="contactsASM.length===0" ng-click="changeBureauState()">
+          <input type="checkbox" ng-model="form.isAdherent" ng-disabled="contactsASM.length===0"
+                 ng-click="changeBureauState()">
         </label>
         Adhérents ({{contactsASM.length}})
       </li>

@@ -124,6 +124,7 @@ angular.module('starter.services', [])
         "categories": [{"value": "ASM Badminton", "type": "other"}]
       };
 
+      //TODO tester les rubriques 'sex' et 'category' pour alimenter les champs et les stats
       /** ne fonctionne pas sous Android
        var parts;
        if (contact.birthday) {
@@ -132,6 +133,15 @@ angular.module('starter.services', [])
         // January - 0, February - 1, etc
         newContact.birthday = new Date(Number(parts[2]), Number(parts[1])-1, Number(parts[0])+1,0,0,0,0);
       }*/
+      /**
+       * bithday format "2015-11-10"
+       */
+      if (contact.birthday) {
+        parts = contact.birthday.split('/');
+        //please put attention to the month (parts[0]), Javascript counts months from 0:
+        // January - 0, February - 1, etc
+        newContact.birthday = Number(parts[2])+"-"+Number(parts[1])+"-"+Number(parts[0]);
+      }
 
       if (contact.emails.length > 0) {
         newContact.emails = [{"value": contact.emails, "type": "home"}];
@@ -146,10 +156,10 @@ angular.module('starter.services', [])
       }
 
       newContact.organizations = [{
-        "name": (contact.member ? "ASM Badminton Bureau" : "ASM Badminton"),
+        "name": (contact.member ? "ASM Badminton Bureau" : "ASM Badminton " + contact.category.toUpperCase()),
         "title": contact.organizations,
         "pref": true
-      }]
+      }];
 
       $log.info('Creation du contact ' + contact.formatted);
 

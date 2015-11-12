@@ -7,12 +7,10 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova', 'ngCordovaOauth', 'firebase'])
 
-  .run(['$ionicPlatform', '$ionicLoading', '$log', '$cordovaNetwork', '$cordovaSplashscreen', '$cordovaAppVersion', '$cordovaDevice','ContactsManager', 'LocalStorageAPI', '$rootScope', 'ToastManager',
+  .run(['$ionicPlatform', '$ionicLoading', '$log', '$cordovaNetwork', '$cordovaSplashscreen', '$cordovaAppVersion', '$cordovaDevice', 'ContactsManager', 'LocalStorageAPI', '$rootScope', 'ToastManager',
     function ($ionicPlatform, $ionicLoading, $log, $cordovaNetwork, $cordovaSplashscreen, $cordovaAppVersion, $cordovaDevice, ContactsManager, LocalStorageAPI, $rootScope, ToastManager) {
 
       $ionicPlatform.ready(function () {
-
-        $cordovaSplashscreen.show();
 
         //alert('ionic ready !')
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -101,11 +99,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
           $rootScope.versionCode = build;
         });
 
-        $rootScope.myDevice = $cordovaDevice.getPlatform() + " - " + $cordovaDevice.getVersion() + " - " +$cordovaDevice.getModel() + " - " + $cordovaDevice.getUUID();
+        $rootScope.myDevice = $cordovaDevice.getPlatform() + " - " + $cordovaDevice.getVersion() + " - " + $cordovaDevice.getModel() + " - " + $cordovaDevice.getUUID();
 
         /** Chargement de l'applicatif */
 
-        //comptage du nombre d'adhérents
+          //comptage du nombre d'adhérents
         $rootScope.contactsASM = [];
         ContactsManager.getAllContactASM()
           .then(function (contacts) {
@@ -123,15 +121,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
         if (LocalStorageAPI.isLocalStorageAvailable) {
           $rootScope.SmsSecurityOptionEnable = LocalStorageAPI.isResultPresent("SMSOptionSecurity");
-        };
+        }
 
         if ($rootScope.SmsSecurityOptionEnable === null) {
           $rootScope.SmsSecurityOptionEnable = false;
-        };
+        }
 
-      //TODO : si comptage != 0 récupèrer les stats enregistrées en locale
 
-      //on masque le spashscreen
+        //TODO : si comptage != 0 récupèrer les stats enregistrées en locale
+
+        //on masque le spashscreen
         $cordovaSplashscreen.hide();
 
       });

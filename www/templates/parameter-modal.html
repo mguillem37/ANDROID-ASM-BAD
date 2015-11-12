@@ -9,11 +9,25 @@
 
   <ion-content class="padding">
 
+    <div>
+      <p>L'option <span style="color: #009688"><strong>"Taille limite SMS"</strong></span> est disponible au niveau des <span style="color: #009688"><strong>Paramètres > Sécurité</strong></span> de votre smartphone. Confirmez si elle est activée et valorisée à 200 ?</p>
+    </div>
+
     <ion-list>
 
       <ion-toggle ng-model="settings.SmsSecurityOptionEnable" ng-change="saveSettings()">
-        Option SMS disponible : {{settings.SmsSecurityOptionEnable ? "Oui" : "Non"}}
+        {{settings.SmsSecurityOptionEnable ? "Activée" : "Désactivée"}}
       </ion-toggle>
+
+      <!-- li class="item item-toggle">
+        {{settings.SmsSecurityOptionEnable ? "Activée" : "Désactivée"}}
+        <label class="toggle toggle-positive">
+          <input type="checkbox" ng-click=saveSettings()">
+             <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </li -->
 
     </ion-list>
 

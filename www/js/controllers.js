@@ -94,13 +94,14 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('SmsCtrl', ['$rootScope', '$scope', 'ContactsManager', 'SmsManager', 'LocalStorageAPI', '$q', '$log', '$ionicModal', '$interval', function ($rootScope, $scope, ContactsManager, SmsManager, LocalStorageAPI,$q, $log, $ionicModal, $interval) {
+  .controller('SmsCtrl', ['$rootScope', '$scope', 'ContactsManager', 'SmsManager', 'LocalStorageAPI', '$q', '$log', '$ionicModal', '$interval', '$cordovaDialogs', function ($rootScope, $scope, ContactsManager, SmsManager, LocalStorageAPI,$q, $log, $ionicModal, $interval, $cordovaDialogs) {
 
     $scope.initFields = function () {
       $scope.form = {
         message: "",
         isBureau: false,
-        isAdherent: false
+        isAdherent: false,
+        isMiniBad: false
       };
       $scope.SMS_THRESHOLD = 160;
       $scope.settings = {
@@ -115,19 +116,36 @@ angular.module('starter.controllers', [])
       // -- pas de réseau
       // -- pas de contact
       // pas de destinataire et de message saisi par l'utilisateur
-      if ($rootScope.contactsASM.length === 0 || !$rootScope.networkOnLine || $scope.form.message.length === 0 || (!$scope.form.isAdherent && !$scope.form.isBureau )) {
+     if ($rootScope.contactsASM.length === 0 || !$rootScope.networkOnLine || $scope.form.message.length === 0 || (!$scope.form.isAdherent && !$scope.form.isBureau && !$scope.form.isMiniBad)) {
         return true;
       } else {
         return false;
       }
     };
 
-    $scope.changeAdherentState = function () {
-      $scope.form.isAdherent = !$scope.form.isBureau;
+    $scope.changeAdherentStateIfIsMinibad = function () {
+      if ($scope.form.isMiniBad) {
+        $scope.form.isAdherent = false;
+      } else {
+        if (!$scope.form.isBureau) {
+          $scope.form.isAdherent = true;
+        }
+      }
+    };
+
+    $scope.changeAdherentStateIfIsMember = function () {
+      if ($scope.form.isBureau) {
+        $scope.form.isAdherent = false;
+      } else {
+        if (!$scope.form.isMiniBad) {
+          $scope.form.isAdherent = true;
+        }
+      }
     };
 
     $scope.changeBureauState = function () {
       $scope.form.isBureau = !$scope.form.isAdherent;
+      $scope.form.isMiniBad = false;
     };
 
     $ionicModal.fromTemplateUrl('templates/tab-sms-modal.html', {
@@ -147,67 +165,73 @@ angular.module('starter.controllers', [])
 
     $scope.sendSMS = function () {
 
-      if ($scope.form.isBureau) {
+      //On commence par demander la confirmation à l'utilisateur
+      $cordovaDialogs.confirm('Confirmez-vous l\'envoi du SMS ?', 'ATTENTION', ['Confirmer', 'Annuler']).then(
+        function (choix) {
+          // Choix -> Integer: 0 - no button, 1 - button 1, 2 - button 2
+          if (choix === 1) {
 
-        //On affiche u message d'attente..
-        $rootScope.showSendingSMSOverlay();
+            if ($scope.form.isBureau) {
 
-        ContactsManager.getAllBureauMemberASM()
-          //pas besoin de découper l'envoi des mails pour le bureau !
-          //la promesse est donc un tableau avec un seul élément
-          .then(SmsManager.getUniquePhoneNumber)
-          .then(function (phonesNumberBureau) {
-            //envoi sans INTENT android
-            SmsManager.sendSMSToContacts(phonesNumberBureau, $scope.form.message)
-              .then(function (res) {
-                //res est un tableau de string contenant la valeur "OK" si SMS envoyé
-                $scope.initFields();
-                $rootScope.hideOverlay();
-                //renvoi du message pour la prochaine promise qui doit l'afficher sous la forme d'un Toast
-                return $q.when(res.length + ' SMS ont été envoyés.');
-              })
-              .then($rootScope.displayToast)
-              .catch($rootScope.alertAno);
-          })
-          .catch($rootScope.alertAno);
+              //On affiche u message d'attente..
+              $rootScope.showSendingSMSOverlay();
 
-      } else {
+              ContactsManager.getAllBureauMemberASM()
+                //pas besoin de découper l'envoi des mails pour le bureau !
+                //la promesse est donc un tableau avec un seul élément
+                .then(SmsManager.getUniquePhoneNumber)
+                .then(function (phonesNumberBureau) {
+                  //envoi sans INTENT android
+                  SmsManager.sendSMSToContacts(phonesNumberBureau, $scope.form.message)
+                    .then(function (res) {
+                      //res est un tableau de string contenant la valeur "OK" si SMS envoyé
+                      $scope.initFields();
+                      $rootScope.hideOverlay();
+                      //renvoi du message pour la prochaine promise qui doit l'afficher sous la forme d'un Toast
+                      return $q.when(res.length + ' SMS ont été envoyés.');
+                    })
+                    .then($rootScope.displayToast)
+                    .catch($rootScope.alertAno);
+                })
+                .catch($rootScope.alertAno);
 
-          //si le téléphone supporte l'option Parametres > Securité > SMS alors on ne slide pas les contacts, on envoi directement tous les SMS !!!
-          if ($rootScope.SmsSecurityOptionEnable) {
+            } else {
 
-            ContactsManager.getAllContactASM()
-              .then(SmsManager.getUniquePhoneNumber)
-              .then(function (phonesNumberBureau) {
-                //envoi sans INTENT android
-                SmsManager.sendSMSToContacts(phonesNumberBureau, $scope.form.message)
-                  .then(function (res) {
-                    //res est un tableau de string contenant la valeur "OK" si SMS envoyé
-                    $scope.initFields();
-                    $rootScope.hideOverlay();
-                    //renvoi du message pour la prochaine promise qui doit l'afficher sous la forme d'un Toast
-                    return $q.when(res.length + ' SMS ont été envoyés.');
+              //si le téléphone supporte l'option Parametres > Securité > SMS alors on ne slide pas les contacts, on envoi directement tous les SMS !!!
+              if ($rootScope.SmsSecurityOptionEnable) {
+
+                ContactsManager.getAllContactASM()
+                  .then(SmsManager.getUniquePhoneNumber)
+                  .then(function (phonesNumberBureau) {
+                    //envoi sans INTENT android
+                    SmsManager.sendSMSToContacts(phonesNumberBureau, $scope.form.message)
+                      .then(function (res) {
+                        //res est un tableau de string contenant la valeur "OK" si SMS envoyé
+                        $scope.initFields();
+                        $rootScope.hideOverlay();
+                        //renvoi du message pour la prochaine promise qui doit l'afficher sous la forme d'un Toast
+                        return $q.when(res.length + ' SMS ont été envoyés.');
+                      })
+                      .then($rootScope.displayToast)
+                      .catch($rootScope.alertAno);
                   })
-                  .then($rootScope.displayToast)
                   .catch($rootScope.alertAno);
-              })
-              .catch($rootScope.alertAno);
 
-          } else {
+              } else {
 
-            //On recherche tous les contacts
-            //On affiche une modale avec les paquest de 10 ou 15 SMS qui vont être envoyés toutes les 30s
-            //$scope.SMSSentTo = [["0781400940", "0781400940", "0781400940"], ["0781400940","0781400940","0781400940","0781400940","0781400940","0781400940"],["0781400940", "0781400940", "0781400940"]];
-            //$scope.displayModal($scope.SMSSentTo);
-            ContactsManager.getAllContactASM()
-              .then(SmsManager.prepareSliceContact)
-              .then(function (numbers) {
-                $scope.displayModal(numbers);
-              })
-              .catch($rootScope.alertAno);
-          }
-      }
-
+                //On recherche tous les contacts
+                //On affiche une modale avec les paquest de 10 ou 15 SMS qui vont être envoyés toutes les 30s
+                //$scope.SMSSentTo = [["0781400940", "0781400940", "0781400940"], ["0781400940","0781400940","0781400940","0781400940","0781400940","0781400940"],["0781400940", "0781400940", "0781400940"]];
+                //$scope.displayModal($scope.SMSSentTo);
+                ContactsManager.getAllContactASM()
+                  .then(SmsManager.prepareSliceContact)
+                  .then(function (numbers) {
+                    $scope.displayModal(numbers);
+                  })
+                  .catch($rootScope.alertAno);
+              }
+            }
+          }})
     };
 
     $scope.displayModal = function (phoneNumbersArray) {
