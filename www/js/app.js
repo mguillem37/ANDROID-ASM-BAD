@@ -69,7 +69,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         };
 
         $rootScope.alertAno = function (error) {
-          $rootScope.hideLoadingOverlay();
+          $rootScope.hideOverlay();
           alert(error);
         };
 
@@ -104,10 +104,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         /** Chargement de l'applicatif */
 
           //comptage du nombre d'adhérents
-        $rootScope.contactsASM = [];
+        $rootScope.countContactsASM = 0;
         ContactsManager.getAllContactASM()
           .then(function (contacts) {
-            $rootScope.contactsASM = contacts;
+            $rootScope.countContactsASM = contacts.length;
           });
 
         //comptage du nombre de membre du bureau
@@ -121,16 +121,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
         if (LocalStorageAPI.isLocalStorageAvailable) {
           $rootScope.SmsSecurityOptionEnable = LocalStorageAPI.isResultPresent("SMSOptionSecurity");
+          $rootScope.statsASM = LocalStorageAPI.isResultPresent("StatsASM");
         }
 
         if ($rootScope.SmsSecurityOptionEnable === null) {
           $rootScope.SmsSecurityOptionEnable = false;
         }
 
-
-        //TODO : si comptage != 0 récupèrer les stats enregistrées en locale
-
-        //on masque le spashscreen
+       //on masque le spashscreen
         $cordovaSplashscreen.hide();
 
       });

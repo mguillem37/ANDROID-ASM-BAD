@@ -9,8 +9,8 @@
 
       <div class="item item-body">
 
-        <div ng-if="contactsASM.length===0">Aucun adhérent dans les contacts</div>
-        <div ng-if="contactsASM.length > 0"><b>{{contactsASM.length}}</b> adhérents ASM Badminton ont été trouvés dans les contacts !</div>
+        <div ng-if="countContactsASM===0">Aucun adhérent dans les contacts</div>
+        <div ng-if="countContactsASM > 0"><b>{{countContactsASM}}</b> adhérents ASM Badminton ont été trouvés dans les contacts !</div>
 
       </div>
 
@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <!--div class="list card" ng-if="contactsASM.length > 0">
+    <div class="list card" ng-if="statsASM !== null">
 
       <div class="item item-divider"><i class="icon ion-stats-bars"></i> Quelques Statistiques</div>
       <div class="item item-body">
@@ -38,34 +38,34 @@
         <div>
           <ion-list>
             <ion-item>
-              <i class="icon ion-male"></i> 63% - <i class="icon ion-female"></i> 37%
+              <i class="icon ion-male"></i> {{ Math.round( (statsASM.cptH/countContactsASM) * 100 ) }}% - <i class="icon ion-female"></i> {{ Math.round( (statsASM.cptF/countContactsASM) * 100 ) }}%
             </ion-item>
             <ion-item>
-              <i class="icon ion-trophy"></i> 30% - <i class="icon ion-tshirt"></i> 70%
+              <i class="icon ion-trophy"></i>  {{ Math.round( (statsASM.cptCompetitor/countContactsASM) * 100 ) }}% - <i class="icon ion-tshirt"></i> {{ Math.round( (statsASM.cptLoisir/countContactsASM) * 100 ) }}%
             </ion-item>
             <ion-item>
               <ul>
-                <li><i class="icon ion-egg"></i> 30 <strong>Poussin</strong></li>
-                <li><i class="icon ion-egg"></i> 30 <strong>Benjamin</strong></li>
-                <li><i class="icon ion-ios-game-controller-a"></i> 30 <strong>Minime</strong></li>
+                <li><i class="icon ion-android-happy"></i> {{statsASM.categorie["Minibad"]}} <strong>Minibad(s)</strong></li>
+                <li><i class="icon ion-egg"></i> {{statsASM.categorie["Poussin"]}} <strong>Poussin(s)</strong></li>
+                <li><i class="icon ion-social-reddit-outline"></i> {{statsASM.categorie["Benjamin 1"] + statsASM.categorie["Benjamin 2"]}} <strong>Benjamin(s)</strong></li>
+                <li><i class="icon ion-ios-game-controller-a"></i> {{statsASM.categorie["Minime 1"] + statsASM.categorie["Minime 2"]}} <strong>Minime(s)</strong></li>
               </ul>
             </ion-item>
             <ion-item>
               <ul>
-                <li><i class="icon ion-ios-game-controller-b"></i> 10 <strong>Junior</strong></li>
-                <li><i class="icon ion-pizza"></i> 15 <strong>Senior</strong></li>
+                <li><i class="icon ion-ios-game-controller-b"></i>  {{statsASM.categorie["Junior 1"] + statsASM.categorie["Junior 2"]}} <strong>Junior(s)</strong></li>
+                <li><i class="icon ion-pizza"></i>  {{statsASM.categorie["Cadet 1"] + statsASM.categorie["Cadet 2"]}} <strong>Cadet(s)</strong></li>
+                <li><i class="icon ion-beer"></i> {{statsASM.categorie["Senior"]}} <strong>Senior(s)</strong></li>
               </ul>
             </ion-item>
             <ion-item>
               <ul>
-                <li><i class="icon ion-ios-glasses-outline"></i> 50 <strong>Vétéran 1</strong></li>
-                <li><i class="icon ion-ios-pint"></i> 20 <strong>Vétéran 2</strong></li>
-                <li><i class="icon ion-ios-pint-outline"></i> 10 <strong>Vétéran 3</strong></li>
+                <li><i class="icon ion-ios-wineglass"></i> {{statsASM.categorie["Veteran 1"] + statsASM.categorie["Veteran 2"] + statsASM.categorie["Veteran 3"] + statsASM.categorie["Veteran 4"] + statsASM.categorie["Veteran 5"]}} <strong>Vétéran(s)</strong></li>
               </ul>
             </ion-item>
           </ion-list>
         </div>
       </div>
-    </div -->
+    </div>
   </ion-content>
 </ion-view>

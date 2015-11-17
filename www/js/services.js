@@ -79,7 +79,7 @@ angular.module('starter.services', [])
 
       angular.forEach(phoneNumbersWithoutDuplicates, function (number, index) {
         $log.info("Envoi SMS aux numéros " + number);
-        promises.push($cordovaSms.send(number, message, optionsSMS));
+        //promises.push($cordovaSms.send(number, message, optionsSMS));
       });
 
       return $q.all(promises);
@@ -100,11 +100,68 @@ angular.module('starter.services', [])
 
   }])
 
+  .factory('StatFactory', ['$log', 'LocalStorageAPI', function ($log, LocalStorageAPI) {
+
+    var statsASM = {
+      cptH: 0,
+      cptF: 0,
+      cptLoisir: 0,
+      cptCompetitor: 0,
+      categorie: {
+        "Veteran 5": 0,
+        "Veteran 4": 0,
+        "Veteran 3": 0,
+        "Veteran 2": 0,
+        "Veteran 1": 0,
+        "Benjamin 1": 0,
+        "Benjamin 2": 0,
+        "Senior": 0,
+        "Junior 1": 0,
+        "Junior 2": 0,
+        "Poussin": 0,
+        "Minime 2": 0,
+        "Minime 1": 0,
+        "Minibad": 0,
+        "Cadet 1": 0,
+        "Cadet 2": 0
+      }
+    };
+
+    return {
+      /**
+       *
+       * @param genre Homme Femme
+       * @param type Compétiteur Loisir
+       * @param categorie Catégorie (minibad, poussin, minimes, ...)
+       */
+      add: function (genre, competitor, categorie) {
+        genre === "H" ? statsASM.cptH++ : statsASM.cptF++;
+        competitor ? statsASM.cptCompetitor++ : statsASM.cptLoisir++;
+        var cpt = statsASM.categorie[categorie]; cpt++;
+        statsASM.categorie[categorie] = cpt;
+      },
+
+      store: function () {
+        if (LocalStorageAPI.isLocalStorageAvailable()) {
+          LocalStorageAPI.saveSearchResult("StatsASM", statsASM);
+        }
+      },
+
+      clear: function () {
+        if (LocalStorageAPI.isLocalStorageAvailable()) {
+          LocalStorageAPI.removeItem("StatsASM");
+        }
+      }
+
+    };
+  }])
+
   .service('ContactsTransformer', ['$log', function ($log) {
 
     this.transform = function (contact) {
       // contact.familyName et contact.givenName sont inversés pour que le gestionnaire de contact associe correctement la lettre de l'alphabet avec
       // le nom de la personne
+
       var newContact = {
         "name": {
           "familyName": contact.familyName,
@@ -113,7 +170,7 @@ angular.module('starter.services', [])
         },
         "displayName": contact.formatted,
         "nickname": contact.formatted,
-        "note": contact.organizations + " - " + contact.note,
+        "note": contact.note,
         "addresses": [{
           "streetAddress": contact.streetAddress,
           "postalCode": contact.postalCode,
@@ -136,12 +193,14 @@ angular.module('starter.services', [])
       /**
        * bithday format "2015-11-10"
        */
-      if (contact.birthday) {
+      /**if (contact.birthday) {
         parts = contact.birthday.split('/');
         //please put attention to the month (parts[0]), Javascript counts months from 0:
         // January - 0, February - 1, etc
         newContact.birthday = Number(parts[2])+"-"+Number(parts[1])+"-"+Number(parts[0]);
-      }
+      }*/
+
+      contact.sex === "H" ? newContact.name.honorificPrefix = "Mr" : newContact.name.honorificPrefix = "Mme";
 
       if (contact.emails.length > 0) {
         newContact.emails = [{"value": contact.emails, "type": "home"}];
@@ -156,7 +215,7 @@ angular.module('starter.services', [])
       }
 
       newContact.organizations = [{
-        "name": (contact.member ? "ASM Badminton Bureau" : "ASM Badminton"),
+        "name": (contact.member ? "ASM Badminton Bureau" : contact.category==="Minibad" ? "ASM Badminton Minibad" : "ASM Badminton"),
         "title": contact.organizations,
         "pref": true
       }];
@@ -167,11 +226,19 @@ angular.module('starter.services', [])
     }
   }])
 
-  .factory('ContactsManager', ['$log', '$q', 'ContactsTransformer', '$cordovaContacts', function ($log, $q, ContactsTransformer, $cordovaContacts) {
+  .factory('ContactsManager', ['$log', '$q', 'ContactsTransformer', '$cordovaContacts', 'StatFactory', function ($log, $q, ContactsTransformer, $cordovaContacts, StatFactory) {
 
     function retrieveAllMembersASM() {
       var options = {};
       options.filter = "ASM Badminton Bureau";
+      options.fields = ['organizations'];
+      options.multiple = true;
+      return retrieveAllContactsASM(options);
+    };
+
+    function retrieveAllMinibadASM() {
+      var options = {};
+      options.filter = "ASM Badminton Minibad";
       options.fields = ['organizations'];
       options.multiple = true;
       return retrieveAllContactsASM(options);
@@ -213,20 +280,28 @@ angular.module('starter.services', [])
 
     };
 
-    function saveAllContactsASM(contacts) {
+    function saveContacts(contacts) {
 
       var promises = [];
+
       //ajout des licencies dans les contacts
       angular.forEach(contacts, function (contact, index) {
-
+        //maj des stats
+        StatFactory.add(contact.sex, contact.competitor, contact.category);
         var contactToSave = ContactsTransformer.transform(contact);
-        //$cordovaContacts.save(contactToSave)
         promises.push(saveAContact(contactToSave));
-
       });
 
       return $q.all(promises);
 
+    };
+
+    function saveAllContactsASM(contacts) {
+        return saveContacts(contacts)
+          .then(StatFactory.store)
+          .then(function(){
+            return $q.when(contacts.length);
+          });
     };
 
     function deleteContacts(contacts) {
@@ -234,7 +309,7 @@ angular.module('starter.services', [])
       //var contactsRemoved = 0;
       angular.forEach(contacts, function (contact, index) {
         if (contact.organizations[0] &&
-          (contact.organizations[0].name === "ASM Badminton" || contact.organizations[0].name === "ASM Badminton Bureau")) {
+          (contact.organizations[0].name === "ASM Badminton" || contact.organizations[0].name === "ASM Badminton Bureau" || contact.organizations[0].name === "ASM Badminton Minibad")) {
           promises.push(contact.remove())
         }
       });
@@ -246,23 +321,50 @@ angular.module('starter.services', [])
     function deleteAllContactsASM() {
       //catch à faire par l'application appelante
       return retrieveAllContactsASM({})
-        .then(deleteContacts);
+        .then(deleteContacts)
+        .finally(StatFactory.clear);
     };
 
     return {
+
+      /** promise : liste des contacts selon le type demandé */
+      getContactsByType: function (type) {
+        switch (type) {
+          case "Minibad" :
+            return retrieveAllMinibadASM();
+            break;
+          case "Bureau" :
+            return retrieveAllMembersASM();
+            break;
+          case "All" :
+            return retrieveAllContactsASM();
+            break;
+          default :
+            return $q.when([]);
+            break;
+        }
+      },
+
+      /** promise : liste des minibad  ou [] si erreur*/
+      getAllMinibadMemberASM: function () {
+        return retrieveAllMinibadASM();
+      },
 
       /** promise : liste des membres du bureau ou [] si erreur*/
       getAllBureauMemberASM: function () {
         return retrieveAllMembersASM();
       },
+
       /** promise : liste de tous les contacts ASM ou [] si erreur*/
       getAllContactASM: function () {
         return retrieveAllContactsASM({});
       },
+
       /** promise : résolue une fois tous les contacts supprimés ; retourne le nombre de contact supprimé */
       removeAllContactsASM: function () {
         return deleteAllContactsASM();
       },
+
       importAllContactsASM: function (contacts) {
         return saveAllContactsASM(contacts);
       }
@@ -285,5 +387,11 @@ angular.module('starter.services', [])
     this.isResultPresent = function (keyword) {
       return JSON.parse(localStorage.getItem(keyword));
     };
+
+    this.removeItem = function (keyword) {
+      if (localStorage.getItem(keyword)) {
+        localStorage.removeItem(keyword)
+      }
+    }
   }]);
 

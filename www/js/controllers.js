@@ -4,18 +4,18 @@ angular.module('starter.controllers', [])
   .controller('SyntheseCtrl', ['$scope', function ($scope) {
   }])
 
-  .controller('AdministrationCtrl', function ($rootScope, $scope, $ionicModal, $cordovaSms, $cordovaToast, $cordovaDialogs, $log, $http, $q, ContactsManager, ToastManager, SmsManager) {
+  .controller('AdministrationCtrl', ['$rootScope', '$scope', '$cordovaDialogs', '$http', 'ContactsManager', function ($rootScope, $scope, $cordovaDialogs, $http, ContactsManager) {
 
     $scope.settings = {
       enableContact: false
     };
 
     $scope.isDisabledImport = function () {
-      return !($scope.settings.enableContact && $rootScope.contactsASM.length === 0);
+      return !($scope.settings.enableContact && $rootScope.countContactsASM === 0);
     };
 
     $scope.isDisabledDelete = function () {
-      return !($scope.settings.enableContact && $rootScope.contactsASM.length > 0)
+      return !($scope.settings.enableContact && $rootScope.countContactsASM > 0)
     };
 
     $scope.processAfterRemove = function (contactsRemoved) {
@@ -48,7 +48,7 @@ angular.module('starter.controllers', [])
       //on recompte les membres
       ContactsManager.getAllContactASM()
         .then(function (contacts) {
-          $rootScope.contactsASM = contacts;
+          $rootScope.countContactsASM = contacts.length;
         });
 
       //on recompte les membre du bureau
@@ -92,9 +92,9 @@ angular.module('starter.controllers', [])
         })
     };
 
-  })
+  }])
 
-  .controller('SmsCtrl', ['$rootScope', '$scope', 'ContactsManager', 'SmsManager', 'LocalStorageAPI', '$q', '$log', '$ionicModal', '$interval', '$cordovaDialogs', function ($rootScope, $scope, ContactsManager, SmsManager, LocalStorageAPI,$q, $log, $ionicModal, $interval, $cordovaDialogs) {
+  .controller('SmsCtrl', ['$rootScope', '$scope', 'ContactsManager', 'SmsManager', 'LocalStorageAPI', '$q', '$log', '$ionicModal', '$interval', '$cordovaDialogs', function ($rootScope, $scope, ContactsManager, SmsManager, LocalStorageAPI, $q, $log, $ionicModal, $interval, $cordovaDialogs) {
 
     $scope.initFields = function () {
       $scope.form = {
@@ -116,7 +116,7 @@ angular.module('starter.controllers', [])
       // -- pas de réseau
       // -- pas de contact
       // pas de destinataire et de message saisi par l'utilisateur
-     if ($rootScope.contactsASM.length === 0 || !$rootScope.networkOnLine || $scope.form.message.length === 0 || (!$scope.form.isAdherent && !$scope.form.isBureau && !$scope.form.isMiniBad)) {
+      if ($rootScope.countContactsASM === 0 || !$rootScope.networkOnLine || $scope.form.message.length === 0 || (!$scope.form.isAdherent && !$scope.form.isBureau && !$scope.form.isMiniBad)) {
         return true;
       } else {
         return false;
@@ -124,23 +124,13 @@ angular.module('starter.controllers', [])
     };
 
     $scope.changeAdherentStateIfIsMinibad = function () {
-      if ($scope.form.isMiniBad) {
-        $scope.form.isAdherent = false;
-      } else {
-        if (!$scope.form.isBureau) {
-          $scope.form.isAdherent = true;
-        }
-      }
+      $scope.form.isAdherent = false;
+      $scope.form.isBureau = !$scope.form.isMiniBad;
     };
 
     $scope.changeAdherentStateIfIsMember = function () {
-      if ($scope.form.isBureau) {
-        $scope.form.isAdherent = false;
-      } else {
-        if (!$scope.form.isMiniBad) {
-          $scope.form.isAdherent = true;
-        }
-      }
+      $scope.form.isAdherent = false;
+      $scope.form.isMiniBad = !$scope.form.isBureau;
     };
 
     $scope.changeBureauState = function () {
@@ -171,13 +161,15 @@ angular.module('starter.controllers', [])
           // Choix -> Integer: 0 - no button, 1 - button 1, 2 - button 2
           if (choix === 1) {
 
-            if ($scope.form.isBureau) {
+            if ($scope.form.isBureau || $scope.form.isMiniBad) {
 
-              //On affiche u message d'attente..
+              var type = $scope.form.isBureau ? "Bureau" : "Minibad";
+
+              //On affiche un message d'attente..
               $rootScope.showSendingSMSOverlay();
 
-              ContactsManager.getAllBureauMemberASM()
-                //pas besoin de découper l'envoi des mails pour le bureau !
+              ContactsManager.getContactsByType(type)
+                //pas besoin de découper l'envoi des mails pour le bureau ou le minibad  !
                 //la promesse est donc un tableau avec un seul élément
                 .then(SmsManager.getUniquePhoneNumber)
                 .then(function (phonesNumberBureau) {
@@ -231,7 +223,9 @@ angular.module('starter.controllers', [])
                   .catch($rootScope.alertAno);
               }
             }
-          }})
+          }
+        }
+      )
     };
 
     $scope.displayModal = function (phoneNumbersArray) {
@@ -262,11 +256,13 @@ angular.module('starter.controllers', [])
 
     };
 
-    $scope.saveSettings = function() {
+    $scope.saveSettings = function () {
       if (LocalStorageAPI.isLocalStorageAvailable) {
         LocalStorageAPI.saveSearchResult("SMSOptionSecurity", $scope.settings.SmsSecurityOptionEnable);
       }
-      $rootScope.SmsSecurityOptionEnable =  $scope.settings.SmsSecurityOptionEnable;
+      $rootScope.SmsSecurityOptionEnable = $scope.settings.SmsSecurityOptionEnable;
     }
 
-  }]);
+  }
+  ])
+;

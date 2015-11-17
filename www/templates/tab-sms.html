@@ -1,7 +1,7 @@
 <ion-view view-title="Sms" hide-nav-bar="false">
 
   <ion-nav-buttons side="right">
-    <button class="button button-icon button-clear ion-gear-a" ng-click="showParameterModal()">
+    <button class="button button-icon button-clear ion-ios-gear" ng-click="showParameterModal()">
     </button>
   </ion-nav-buttons>
 
@@ -11,24 +11,24 @@
 
       <li class="item item-checkbox">
         <label class="checkbox">
-          <input type="checkbox" ng-model="form.isBureau" ng-disabled="contactsASM.length===0"
+          <input type="checkbox" ng-model="form.isBureau" ng-disabled="countContactsASM===0"
                  ng-click="changeAdherentStateIfIsMember()">
         </label>Bureau ({{membersASM.length}})
       </li>
 
-      <!-- li class="item item-checkbox">
+      <li class="item item-checkbox">
         <label class="checkbox">
-          <input type="checkbox" ng-model="form.isBureau" ng-disabled="contactsASM.length===0"
+          <input type="checkbox" ng-model="form.isBureau" ng-disabled="countContactsASM===0"
                  ng-click="changeAdherentStateIfIsMinibad()">
         </label>Minibad
-      </li -->
+      </li>
 
       <li class="item item-checkbox">
         <label class="checkbox">
-          <input type="checkbox" ng-model="form.isAdherent" ng-disabled="contactsASM.length===0"
+          <input type="checkbox" ng-model="form.isAdherent" ng-disabled="countContactsASM===0"
                  ng-click="changeBureauState()">
         </label>
-        Adhérents ({{contactsASM.length}})
+        Adhérents ({{countContactsASM}})
       </li>
 
       <div class="item item-assertive text-center" ng-if="!networkOnLine">
