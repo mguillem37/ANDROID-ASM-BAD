@@ -1,10 +1,10 @@
 angular.module('starter.controllers', [])
 
 
-  .controller('SyntheseCtrl', ['$scope', function ($scope) {
+  .controller('SyntheseCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
   }])
 
-  .controller('AdministrationCtrl', ['$rootScope', '$scope', '$cordovaDialogs', '$http', 'ContactsManager', function ($rootScope, $scope, $cordovaDialogs, $http, ContactsManager) {
+  .controller('AdministrationCtrl', ['$rootScope', '$scope', '$cordovaDialogs', '$http', 'ContactsManager', 'LocalStorageAPI', function ($rootScope, $scope, $cordovaDialogs, $http, ContactsManager, LocalStorageAPI) {
 
     $scope.settings = {
       enableContact: false
@@ -19,6 +19,8 @@ angular.module('starter.controllers', [])
     };
 
     $scope.processAfterRemove = function (contactsRemoved) {
+      //On recharge les stats
+      $rootScope.statsASM = null;
       $rootScope.hideOverlay();
       $rootScope.displayToast(contactsRemoved.length + ' contacts ASM ont été supprimés.');
     };
@@ -60,6 +62,8 @@ angular.module('starter.controllers', [])
     };
 
     $scope.processAfterImport = function (contactAdded) {
+      //On recharge les stats
+      $rootScope.statsASM = LocalStorageAPI.isResultPresent("StatsASM");
       $rootScope.hideOverlay();
       $rootScope.displayToast(contactAdded.length + ' contacts ASM ont été importés.');
     };
@@ -101,7 +105,7 @@ angular.module('starter.controllers', [])
         message: "",
         isBureau: false,
         isAdherent: false,
-        isMiniBad: false
+        isMinibad: false
       };
       $scope.SMS_THRESHOLD = 160;
       $scope.settings = {
@@ -116,7 +120,7 @@ angular.module('starter.controllers', [])
       // -- pas de réseau
       // -- pas de contact
       // pas de destinataire et de message saisi par l'utilisateur
-      if ($rootScope.countContactsASM === 0 || !$rootScope.networkOnLine || $scope.form.message.length === 0 || (!$scope.form.isAdherent && !$scope.form.isBureau && !$scope.form.isMiniBad)) {
+      if ($rootScope.countContactsASM === 0 || !$rootScope.networkOnLine || $scope.form.message.length === 0 || (!$scope.form.isAdherent && !$scope.form.isBureau && !$scope.form.isMinibad)) {
         return true;
       } else {
         return false;
@@ -125,17 +129,17 @@ angular.module('starter.controllers', [])
 
     $scope.changeAdherentStateIfIsMinibad = function () {
       $scope.form.isAdherent = false;
-      $scope.form.isBureau = !$scope.form.isMiniBad;
+      $scope.form.isBureau = !$scope.form.isMinibad;
     };
 
     $scope.changeAdherentStateIfIsMember = function () {
       $scope.form.isAdherent = false;
-      $scope.form.isMiniBad = !$scope.form.isBureau;
+      $scope.form.isMinibad = !$scope.form.isBureau;
     };
 
     $scope.changeBureauState = function () {
       $scope.form.isBureau = !$scope.form.isAdherent;
-      $scope.form.isMiniBad = false;
+      $scope.form.isMinibad = false;
     };
 
     $ionicModal.fromTemplateUrl('templates/tab-sms-modal.html', {
@@ -161,7 +165,7 @@ angular.module('starter.controllers', [])
           // Choix -> Integer: 0 - no button, 1 - button 1, 2 - button 2
           if (choix === 1) {
 
-            if ($scope.form.isBureau || $scope.form.isMiniBad) {
+            if ($scope.form.isBureau || $scope.form.isMinibad) {
 
               var type = $scope.form.isBureau ? "Bureau" : "Minibad";
 

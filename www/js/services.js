@@ -1,6 +1,6 @@
 angular.module('starter.services', [])
 
-  .service('SmsManager', ['$cordovaSms', '$log', '$q', '$timeout', function ($cordovaSms, $log, $q, $timeout) {
+  .service('SmsManager', ['$cordovaSms', '$log', '$q', function ($cordovaSms, $log, $q) {
 
     function optimizePhoneNumbers(contacts) {
 
@@ -37,7 +37,7 @@ angular.module('starter.services', [])
       var phoneNumbersWithoutDuplicates = optimizePhoneNumbers(contacts);
 
       //On slice le tableau de contacts par tranche de 15
-      var startIndex = 0, step = 10, subArray;
+      var startIndex = 0, step = 15, subArray;
       while (startIndex < phoneNumbersWithoutDuplicates.length) {
         subArray = phoneNumbersWithoutDuplicates.slice(startIndex, (startIndex + step));
         $log.info("startIndex (" + startIndex + "-" + (startIndex + step) + ") : " + subArray);
@@ -79,7 +79,7 @@ angular.module('starter.services', [])
 
       angular.forEach(phoneNumbersWithoutDuplicates, function (number, index) {
         $log.info("Envoi SMS aux numéros " + number);
-        //promises.push($cordovaSms.send(number, message, optionsSMS));
+        promises.push($cordovaSms.send(number, message, optionsSMS));
       });
 
       return $q.all(promises);

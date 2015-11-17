@@ -9,7 +9,13 @@
     <ion-list>
 
       <ion-item class="item item-divider">
-        {{SMSSentTo.length}} envoi(s) à traiter
+        <i class="icon ion-android-warning"></i>Cette fenêtre se fermera automatiquement.
+      </ion-item>
+
+      <ion-item class="item item-divider">
+        <p>{{SMSSentTo.length}} envoi(s) à traiter<br>
+        Le temps d'attente est de 30s entre chaque envois
+        </p>
       </ion-item>
 
       <ion-item ng-repeat="phoneNumers in SMSSentTo">

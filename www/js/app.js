@@ -21,12 +21,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
 
         if (window.StatusBar) {
-          $log.info("StatusBar present !");
           // org.apache.cordova.statusbar required
           StatusBar.styleLightContent();
           StatusBar.style(3);
-        } else {
-          $log.info("StatusBar not present !");
         }
 
         // ** A l'écoute du réseau */
@@ -108,6 +105,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         ContactsManager.getAllContactASM()
           .then(function (contacts) {
             $rootScope.countContactsASM = contacts.length;
+            if ($rootScope.countContactsASM !== 0 && $rootScope.statsASM !== null && angular.isDefined($rootScope.statsASM)) {
+              $rootScope.pourcentH = Math.round(($rootScope.statsASM.cptH / $rootScope.countContactsASM) * 100);
+              $rootScope.pourcentF = Math.round(($rootScope.statsASM.cptF / $rootScope.countContactsASM) * 100);
+              $rootScope.pourcentC = Math.round(($rootScope.statsASM.cptCompetitor / $rootScope.countContactsASM) * 100);
+              $rootScope.pourcentL = Math.round(($rootScope.statsASM.cptLoisir / $rootScope.countContactsASM) * 100);
+            }
           });
 
         //comptage du nombre de membre du bureau
@@ -117,21 +120,29 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             $rootScope.membersASM = members;
           });
 
-        //On récupère le flag indiquant si le téléphone dispose de l'option SMS Security
+        $rootScope.countMinibadASM = 0;
+        ContactsManager.getAllMinibadMemberASM()
+          .then(function (minibad) {
+            $rootScope.countMinibadASM = minibad.length;
+          });
 
-        if (LocalStorageAPI.isLocalStorageAvailable) {
-          $rootScope.SmsSecurityOptionEnable = LocalStorageAPI.isResultPresent("SMSOptionSecurity");
-          $rootScope.statsASM = LocalStorageAPI.isResultPresent("StatsASM");
-        }
-
-        if ($rootScope.SmsSecurityOptionEnable === null) {
-          $rootScope.SmsSecurityOptionEnable = false;
-        }
-
-       //on masque le spashscreen
+        //on masque le spashscreen
         $cordovaSplashscreen.hide();
 
       });
+
+      //Pas besoin d'attendre ici que Cordova/ionic soit prêt. Sinon le premier écran se charge avant !
+      //On récupère le flag indiquant si le téléphone dispose de l'option SMS Security
+
+      if (LocalStorageAPI.isLocalStorageAvailable()) {
+        $rootScope.SmsSecurityOptionEnable = LocalStorageAPI.isResultPresent("SMSOptionSecurity");
+        $rootScope.statsASM = LocalStorageAPI.isResultPresent("StatsASM");
+      }
+
+      if ($rootScope.SmsSecurityOptionEnable === null) {
+        $rootScope.SmsSecurityOptionEnable = false;
+      }
+
     }])
 
   .

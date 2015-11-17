@@ -30,7 +30,7 @@
       </div>
     </div>
 
-    <div class="list card" ng-if="statsASM !== null">
+    <div class="list card" ng-if="countContactsASM !==0">
 
       <div class="item item-divider"><i class="icon ion-stats-bars"></i> Quelques Statistiques</div>
       <div class="item item-body">
@@ -38,10 +38,10 @@
         <div>
           <ion-list>
             <ion-item>
-              <i class="icon ion-male"></i> {{ Math.round( (statsASM.cptH/countContactsASM) * 100 ) }}% - <i class="icon ion-female"></i> {{ Math.round( (statsASM.cptF/countContactsASM) * 100 ) }}%
+              <i class="icon ion-male"></i> {{ pourcentH }}% - <i class="icon ion-female"></i> {{ pourcentF }}%
             </ion-item>
             <ion-item>
-              <i class="icon ion-trophy"></i>  {{ Math.round( (statsASM.cptCompetitor/countContactsASM) * 100 ) }}% - <i class="icon ion-tshirt"></i> {{ Math.round( (statsASM.cptLoisir/countContactsASM) * 100 ) }}%
+              <i class="icon ion-trophy"></i>  {{ pourcentC }}% - <i class="icon ion-tshirt"></i> {{ pourcentL }}%
             </ion-item>
             <ion-item>
               <ul>
