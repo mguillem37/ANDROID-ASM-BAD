@@ -6,9 +6,6 @@
     "ionic-platform-web-client": "~0.1.0"
   },
   "dependencies": {
-    "ngCordova": "~0.1.20-alpha",
-    "ng-cordova-oauth": "~0.1.4",
-    "firebase": "~2.3.1",
-    "angularfire": "~1.1.3"
+    "ngCordova": "~0.1.20-alpha"
   }
 }
