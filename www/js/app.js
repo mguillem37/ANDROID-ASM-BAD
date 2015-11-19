@@ -96,6 +96,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
           $rootScope.versionCode = build;
         });
 
+        $rootScope.computeStats = function() {
+          if ($rootScope.countContactsASM !== 0 && $rootScope.statsASM !== null && angular.isDefined($rootScope.statsASM)) {
+            $rootScope.pourcentH = Math.round(($rootScope.statsASM.cptH / $rootScope.countContactsASM) * 100);
+            $rootScope.pourcentF = Math.round(($rootScope.statsASM.cptF / $rootScope.countContactsASM) * 100);
+            $rootScope.pourcentC = Math.round(($rootScope.statsASM.cptCompetitor / $rootScope.countContactsASM) * 100);
+            $rootScope.pourcentL = Math.round(($rootScope.statsASM.cptLoisir / $rootScope.countContactsASM) * 100);
+          }
+        };
+
         $rootScope.myDevice = $cordovaDevice.getPlatform() + " - " + $cordovaDevice.getVersion() + " - " + $cordovaDevice.getModel() + " - " + $cordovaDevice.getUUID();
 
         /** Chargement de l'applicatif */
@@ -105,12 +114,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         ContactsManager.getAllContactASM()
           .then(function (contacts) {
             $rootScope.countContactsASM = contacts.length;
-            if ($rootScope.countContactsASM !== 0 && $rootScope.statsASM !== null && angular.isDefined($rootScope.statsASM)) {
-              $rootScope.pourcentH = Math.round(($rootScope.statsASM.cptH / $rootScope.countContactsASM) * 100);
-              $rootScope.pourcentF = Math.round(($rootScope.statsASM.cptF / $rootScope.countContactsASM) * 100);
-              $rootScope.pourcentC = Math.round(($rootScope.statsASM.cptCompetitor / $rootScope.countContactsASM) * 100);
-              $rootScope.pourcentL = Math.round(($rootScope.statsASM.cptLoisir / $rootScope.countContactsASM) * 100);
-            }
+            $rootScope.computeStats();
           });
 
         //comptage du nombre de membre du bureau

@@ -4,7 +4,7 @@ angular.module('starter.controllers', [])
   .controller('SyntheseCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
   }])
 
-  .controller('AdministrationCtrl', ['$rootScope', '$scope', '$cordovaDialogs', '$http', 'ContactsManager', 'LocalStorageAPI', function ($rootScope, $scope, $cordovaDialogs, $http, ContactsManager, LocalStorageAPI) {
+  .controller('AdministrationCtrl', ['$rootScope', '$scope', '$cordovaDialogs', '$http', 'ContactsManager', 'LocalStorageAPI', 'StatFactory', '$q', function ($rootScope, $scope, $cordovaDialogs, $http, ContactsManager, LocalStorageAPI, StatFactory, $q) {
 
     $scope.settings = {
       enableContact: false
@@ -19,10 +19,15 @@ angular.module('starter.controllers', [])
     };
 
     $scope.processAfterRemove = function (contactsRemoved) {
-      //On recharge les stats
-      $rootScope.statsASM = null;
-      $rootScope.hideOverlay();
-      $rootScope.displayToast(contactsRemoved.length + ' contacts ASM ont été supprimés.');
+
+      $scope.countContactAgain()
+        .then(function () {
+          //On recharge les stats
+          StatFactory.clear();
+          $rootScope.statsASM = LocalStorageAPI.isResultPresent("StatsASM");
+          $rootScope.hideOverlay();
+          $rootScope.displayToast(contactsRemoved.length + ' contacts ASM ont été supprimés.');
+        });
     };
 
     $scope.removeContacts = function () {
@@ -37,7 +42,6 @@ angular.module('starter.controllers', [])
             //extraction des contacts ayant comme Organisation ASM Badminton
             ContactsManager.removeAllContactsASM()
               .then($scope.processAfterRemove)
-              .then($scope.countContactAgain)
               .catch($rootScope.alertAno);
 
           } //fin choix
@@ -47,25 +51,43 @@ angular.module('starter.controllers', [])
 
     $scope.countContactAgain = function () {
 
-      //on recompte les membres
-      ContactsManager.getAllContactASM()
-        .then(function (contacts) {
-          $rootScope.countContactsASM = contacts.length;
-        });
+      var deferred = $q.defer();
 
-      //on recompte les membre du bureau
-      ContactsManager.getAllBureauMemberASM()
-        .then(function (membersImported) {
-          $rootScope.membersASM = membersImported;
-        })
+      //on recompte les adhérents, les membres puis les minibad
+      ContactsManager.getAllContactASM()
+        .then(
+          function (contacts) {
+            $rootScope.countContactsASM = contacts.length;
+            return $q.when("");
+          })
+        .then(ContactsManager.getAllBureauMemberASM)
+        .then(
+          function (membersImported) {
+            $rootScope.membersASM = membersImported;
+            return $q.when("");
+          })
+        .then(ContactsManager.getAllMinibadMemberASM)
+        .then(
+          function (minibad) {
+            $rootScope.countMinibadASM = minibad.length;
+            deferred.resolve("");
+          }
+        );
+
+      return deferred.promise;
 
     };
 
     $scope.processAfterImport = function (contactAdded) {
-      //On recharge les stats
-      $rootScope.statsASM = LocalStorageAPI.isResultPresent("StatsASM");
-      $rootScope.hideOverlay();
-      $rootScope.displayToast(contactAdded.length + ' contacts ASM ont été importés.');
+      $scope.countContactAgain()
+        .then(function () {
+          //On recharge les stats
+          StatFactory.store();
+          $rootScope.statsASM = LocalStorageAPI.isResultPresent("StatsASM");
+          $rootScope.computeStats();
+          $rootScope.hideOverlay();
+          $rootScope.displayToast(contactAdded + ' contacts ASM ont été importés.');
+        })
     };
 
     $scope.importContacts = function () {
@@ -85,7 +107,6 @@ angular.module('starter.controllers', [])
               .success(function (licencies, status, headers, config) {
                 ContactsManager.importAllContactsASM(licencies)
                   .then($scope.processAfterImport)
-                  .then($scope.countContactAgain)
                   .catch($rootScope.alertAno);
               })
               .error(function (data, status, headers, config) {

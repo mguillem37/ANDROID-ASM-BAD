@@ -102,6 +102,30 @@ angular.module('starter.services', [])
 
   .factory('StatFactory', ['$log', 'LocalStorageAPI', function ($log, LocalStorageAPI) {
 
+    var initStatsASM = {
+      cptH: 0,
+      cptF: 0,
+      cptLoisir: 0,
+      cptCompetitor: 0,
+      categorie: {
+        "Veteran 5": 0,
+        "Veteran 4": 0,
+        "Veteran 3": 0,
+        "Veteran 2": 0,
+        "Veteran 1": 0,
+        "Benjamin 1": 0,
+        "Benjamin 2": 0,
+        "Senior": 0,
+        "Junior 1": 0,
+        "Junior 2": 0,
+        "Poussin": 0,
+        "Minime 2": 0,
+        "Minime 1": 0,
+        "Minibad": 0,
+        "Cadet 1": 0,
+        "Cadet 2": 0
+      }
+    };
     var statsASM = {
       cptH: 0,
       cptF: 0,
@@ -135,6 +159,7 @@ angular.module('starter.services', [])
        * @param categorie Catégorie (minibad, poussin, minimes, ...)
        */
       add: function (genre, competitor, categorie) {
+        //au premier appel on initiale la structure de sauvegarde
         genre === "H" ? statsASM.cptH++ : statsASM.cptF++;
         competitor ? statsASM.cptCompetitor++ : statsASM.cptLoisir++;
         var cpt = statsASM.categorie[categorie]; cpt++;
@@ -151,6 +176,7 @@ angular.module('starter.services', [])
         if (LocalStorageAPI.isLocalStorageAvailable()) {
           LocalStorageAPI.removeItem("StatsASM");
         }
+        angular.copy(initStatsASM, statsASM);
       }
 
     };
@@ -298,7 +324,6 @@ angular.module('starter.services', [])
 
     function saveAllContactsASM(contacts) {
         return saveContacts(contacts)
-          .then(StatFactory.store)
           .then(function(){
             return $q.when(contacts.length);
           });
@@ -321,8 +346,7 @@ angular.module('starter.services', [])
     function deleteAllContactsASM() {
       //catch à faire par l'application appelante
       return retrieveAllContactsASM({})
-        .then(deleteContacts)
-        .finally(StatFactory.clear);
+        .then(deleteContacts);
     };
 
     return {
