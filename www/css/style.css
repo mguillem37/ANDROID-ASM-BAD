@@ -2,8 +2,32 @@
 
 .force-footer-bar-heigth {
   height: 110px !important;
+  color: white;
 }
 
+.force-footer-bar-heigth.expanded{
+  font-size: 80%;
+}
+
+.menu-open .force-footer-bar-heigth.expanded{
+  background-color: #11c1f3;
+}
+.menu .avatar {
+  height: 88px;
+  width: 88px;
+}
+
+.menu h2 {
+  bottom: 0;
+  font-size: 18px;
+  left: 16px;
+  position: absolute;
+  color: white;
+}
+
+.menu-open .bar.bar-header.expanded {
+  background-color: #11c1f3;
+}
 .menu-open .ion-navicon {
   transform: rotate(-360deg);
   -webkit-transition: all 0.2s ease-in-out;

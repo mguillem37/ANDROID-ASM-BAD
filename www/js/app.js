@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova', 'ionic-material'])
 
   .run(['$ionicPlatform', '$ionicLoading', '$log', '$cordovaNetwork', '$cordovaSplashscreen', '$cordovaAppVersion', '$cordovaDevice', '$cordovaStatusbar', 'ContactsManager', 'LocalStorageAPI', '$rootScope', 'ToastManager',
     function ($ionicPlatform, $ionicLoading, $log, $cordovaNetwork, $cordovaSplashscreen, $cordovaAppVersion, $cordovaDevice, $cordovaStatusbar, ContactsManager, LocalStorageAPI, $rootScope, ToastManager) {
@@ -32,6 +32,23 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
         $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
           $rootScope.networkOnLine = false;
+        });
+
+        // initialisation des variables avant mle premier évènement
+        $rootScope.orientation = "portrait";
+        $rootScope.buttonImportText ="Importer...";
+        $rootScope.buttonDeleteText ="Supprimer...";
+
+        window.addEventListener("orientationchange", function(){
+          $rootScope.orientation = screen.orientation.type;
+          if ($rootScope.orientation && $rootScope.orientation.substring(0,1).toUpperCase() === "P") {
+            $rootScope.buttonImportText ="Importer...";
+            $rootScope.buttonDeleteText ="Supprimer...";
+          } else {
+            $rootScope.buttonImportText = "Importer les contacts ASM";
+            $rootScope.buttonDeleteText = "Supprimer les contacts ASM";
+          }
+
         });
 
         /** Méthodes utilitaires Globales */
@@ -159,7 +176,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       .state('tab', {
         url: '/tab',
         abstract: true,
-        templateUrl: 'templates/tabs.html'
+        templateUrl: 'templates/tabs.html',
+        controller : 'TabCtrl',
       })
 
       // Each tab has its own nav history stack:

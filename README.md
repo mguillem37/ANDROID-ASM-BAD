@@ -23,8 +23,14 @@ zipalign -v 4 platforms\android\bin\MainActivity-release-unsigned.apk ASMBad.apk
 - augmentation taille champ message SMS (255)
 
 # v1.1.4
+ bower install ion-md-input --save-dev
+ bower install ionic-material --save-dev
+ 
 - Menu gauche : ajout avatar du club
 - Intégration Material Design
+- Détection orientation mobile
+
+- checkbox : à aligner si landscape
 - Intégration librairie ion-md-input
 - Afficher le nombre de contacts avec mobile (06 et 07) dans les stats
 

@@ -1,15 +1,19 @@
 angular.module('starter.controllers', [])
 
+  .controller('TabCtrl', ['ionicMaterialInk', function (ionicMaterialInk) {
+    // Set Ink on tabs
+    ionicMaterialInk.displayEffect();
+  }])
 
   .controller('SyntheseCtrl', ['$scope', '$rootScope', function ($scope, $rootScope) {
   }])
 
-  .controller('AdministrationCtrl', ['$rootScope', '$scope', '$cordovaDialogs', '$http', 'ContactsManager', 'LocalStorageAPI', 'StatFactory', '$q', function ($rootScope, $scope, $cordovaDialogs, $http, ContactsManager, LocalStorageAPI, StatFactory, $q) {
+  .controller('AdministrationCtrl', ['$rootScope', '$scope', '$cordovaDialogs', '$http', 'ContactsManager', 'LocalStorageAPI', 'StatFactory', '$q', 'ionicMaterialInk', function ($rootScope, $scope, $cordovaDialogs, $http, ContactsManager, LocalStorageAPI, StatFactory, $q, ionicMaterialInk) {
 
     $scope.settings = {
       enableContact: false
     };
-
+    
     $scope.isDisabledImport = function () {
       return !($scope.settings.enableContact && $rootScope.countContactsASM === 0);
     };
@@ -31,6 +35,8 @@ angular.module('starter.controllers', [])
     };
 
     $scope.removeContacts = function () {
+
+      ionicMaterialInk.displayEffect();
 
       //On commence par demander la confirmation à l'utilisateur
       $cordovaDialogs.confirm('Confirmez-vous la suppression des contacts de l\'ASM ?', 'Attention', ['Confirmer', 'Annuler']).then(
@@ -92,6 +98,8 @@ angular.module('starter.controllers', [])
 
     $scope.importContacts = function () {
 
+      ionicMaterialInk.displayEffect();
+
       //On commence par demander la confirmation à l'utilisateur
       $cordovaDialogs.confirm('Confirmez-vous l\'import des contacts ?', 'Attention', ['Confirmer', 'Annuler']).then(
         function (choix) {
@@ -117,9 +125,12 @@ angular.module('starter.controllers', [])
         })
     };
 
+    ionicMaterialInk.displayEffect();
+
   }])
 
-  .controller('SmsCtrl', ['$rootScope', '$scope', 'ContactsManager', 'SmsManager', 'LocalStorageAPI', '$q', '$log', '$ionicModal', '$interval', '$cordovaDialogs', function ($rootScope, $scope, ContactsManager, SmsManager, LocalStorageAPI, $q, $log, $ionicModal, $interval, $cordovaDialogs) {
+  .controller('SmsCtrl', ['$rootScope', '$scope', 'ContactsManager', 'SmsManager', 'LocalStorageAPI', '$q', '$log', '$ionicModal', '$interval', '$cordovaDialogs', 'ionicMaterialInk',
+    function ($rootScope, $scope, ContactsManager, SmsManager, LocalStorageAPI, $q, $log, $ionicModal, $interval, $cordovaDialogs, ionicMaterialInk) {
 
     $scope.initFields = function () {
       $scope.form = {
@@ -297,6 +308,8 @@ angular.module('starter.controllers', [])
       $rootScope.SmsSecurityOptionEnable = $scope.settings.SmsSecurityOptionEnable;
     }
 
+    // Set Ink
+    ionicMaterialInk.displayEffect();
   }
   ])
 ;
