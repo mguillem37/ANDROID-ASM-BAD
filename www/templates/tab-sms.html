@@ -37,9 +37,10 @@
 
       <label class="item item-input item-stacked-label">
         <span class="input-label">Message SMS <i>({{form.message.length}}/{{SMS_THRESHOLD}})</i></span>
-          <textarea ng-model="form.message" type="text" rows="3"
+          <textarea ng-model="form.message" type="text" rows="4"
                     placeholder="Corps du message à envoyer par SMS"
-                    ng-maxlength="160" maxlength="160"></textarea>
+                    ng-model-options="{ allowInvalid: true }"
+                    ng-maxlength="255" maxlength="255"></textarea>
       </label>
 
       <div class="item">

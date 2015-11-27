@@ -7,8 +7,8 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova'])
 
-  .run(['$ionicPlatform', '$ionicLoading', '$log', '$cordovaNetwork', '$cordovaSplashscreen', '$cordovaAppVersion', '$cordovaDevice', 'ContactsManager', 'LocalStorageAPI', '$rootScope', 'ToastManager',
-    function ($ionicPlatform, $ionicLoading, $log, $cordovaNetwork, $cordovaSplashscreen, $cordovaAppVersion, $cordovaDevice, ContactsManager, LocalStorageAPI, $rootScope, ToastManager) {
+  .run(['$ionicPlatform', '$ionicLoading', '$log', '$cordovaNetwork', '$cordovaSplashscreen', '$cordovaAppVersion', '$cordovaDevice', '$cordovaStatusbar', 'ContactsManager', 'LocalStorageAPI', '$rootScope', 'ToastManager',
+    function ($ionicPlatform, $ionicLoading, $log, $cordovaNetwork, $cordovaSplashscreen, $cordovaAppVersion, $cordovaDevice, $cordovaStatusbar, ContactsManager, LocalStorageAPI, $rootScope, ToastManager) {
 
       $ionicPlatform.ready(function () {
 
@@ -20,11 +20,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
           cordova.plugins.Keyboard.disableScroll(true);
         }
 
-        if (window.StatusBar) {
-          // org.apache.cordova.statusbar required
-          StatusBar.styleLightContent();
-          StatusBar.style(3);
-        }
+        $cordovaStatusbar.overlaysWebView(true);
+        $cordovaStatusbar.styleColor('blue');
 
         // ** A l'écoute du réseau */
         $rootScope.networkOnLine = $cordovaNetwork.isOnline();

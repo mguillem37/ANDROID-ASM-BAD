@@ -3,3 +3,17 @@
 .force-footer-bar-heigth {
   height: 110px !important;
 }
+
+.menu-open .ion-navicon {
+  transform: rotate(-360deg);
+  -webkit-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
+.menu-open .ion-navicon:before {
+  content: "\f2ca";
+}
+
+.menu .bar.bar-header.expanded {
+  transition: all .5s ease-in-out;
+}

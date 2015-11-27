@@ -9,14 +9,17 @@
       </ion-toggle>
 
       <ion-item>
-        <button class="button icon-left ion-android-person-add button-block button-positive" ng-click="importContacts()"
+        <!--MT -->
+        <button class="button button-block button-positive icon-left ion-android-person-add"
+                ng-click="importContacts()"
                 ng-disabled="isDisabledImport()">
           Importer les contacts ASM
         </button>
       </ion-item>
 
       <ion-item>
-        <button class="button icon-left ion-ios-trash-outline button-block button-positive" ng-click="removeContacts()"
+        <button class="button button-block icon-left ion-ios-trash-outline button-positive"
+                ng-click="removeContacts()"
                 ng-disabled="isDisabledDelete()">
           Supprimer les contacts ASM
         </button>

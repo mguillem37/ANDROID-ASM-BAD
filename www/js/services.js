@@ -8,9 +8,13 @@ angular.module('starter.services', [])
 
       //On parcourt une premiere fois la liste des contacts pour générer une liste des numéros de téléphones des contacts ASM
       angular.forEach(contacts, function (contact, index) {
-          if (contact.phoneNumbers && contact.phoneNumbers !== null && contact.phoneNumbers !== "" && contact.phoneNumbers[0].type === "mobile") {
-            telephoneNumber = contact.phoneNumbers[0].value.split(" ").join("");
-            phoneNumbers.push(telephoneNumber);
+          if (contact.phoneNumbers && contact.phoneNumbers !== null && contact.phoneNumbers !== "" && contact.phoneNumbers.length > 0) {
+            contact.phoneNumbers.foreach(function (aPhone) {
+              if (aPhone.type === "mobile") {
+                telephoneNumber = aPhone.value.split(" ").join("");
+                phoneNumbers.push(telephoneNumber);
+              }
+            });
           }
         }
       );
@@ -162,7 +166,8 @@ angular.module('starter.services', [])
         //au premier appel on initiale la structure de sauvegarde
         genre === "H" ? statsASM.cptH++ : statsASM.cptF++;
         competitor ? statsASM.cptCompetitor++ : statsASM.cptLoisir++;
-        var cpt = statsASM.categorie[categorie]; cpt++;
+        var cpt = statsASM.categorie[categorie];
+        cpt++;
         statsASM.categorie[categorie] = cpt;
       },
 
@@ -241,7 +246,7 @@ angular.module('starter.services', [])
       }
 
       newContact.organizations = [{
-        "name": (contact.member ? "ASM Badminton Bureau" : contact.category==="Minibad" ? "ASM Badminton Minibad" : "ASM Badminton"),
+        "name": (contact.member ? "ASM Badminton Bureau" : contact.category === "Minibad" ? "ASM Badminton Minibad" : "ASM Badminton"),
         "title": contact.organizations,
         "pref": true
       }];
@@ -323,10 +328,10 @@ angular.module('starter.services', [])
     };
 
     function saveAllContactsASM(contacts) {
-        return saveContacts(contacts)
-          .then(function(){
-            return $q.when(contacts.length);
-          });
+      return saveContacts(contacts)
+        .then(function () {
+          return $q.when(contacts.length);
+        });
     };
 
     function deleteContacts(contacts) {

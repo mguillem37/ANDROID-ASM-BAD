@@ -128,7 +128,7 @@ angular.module('starter.controllers', [])
         isAdherent: false,
         isMinibad: false
       };
-      $scope.SMS_THRESHOLD = 160;
+      $scope.SMS_THRESHOLD = 255;
       $scope.settings = {
         SmsSecurityOptionEnable: $rootScope.SmsSecurityOptionEnable
       };
@@ -149,18 +149,24 @@ angular.module('starter.controllers', [])
     };
 
     $scope.changeAdherentStateIfIsMinibad = function () {
-      $scope.form.isAdherent = false;
-      $scope.form.isBureau = !$scope.form.isMinibad;
+      if ($scope.form.isMinibad) {
+        $scope.form.isAdherent = false;
+        $scope.form.isBureau = false;
+      }
     };
 
     $scope.changeAdherentStateIfIsMember = function () {
-      $scope.form.isAdherent = false;
-      $scope.form.isMinibad = !$scope.form.isBureau;
+      if ($scope.form.isBureau) {
+        $scope.form.isAdherent = false;
+        $scope.form.isMinibad = false;
+      }
     };
 
     $scope.changeBureauState = function () {
-      $scope.form.isBureau = !$scope.form.isAdherent;
-      $scope.form.isMinibad = false;
+      if ($scope.form.isAdherent) {
+        $scope.form.isBureau = false;
+        $scope.form.isMinibad = false;
+      }
     };
 
     $ionicModal.fromTemplateUrl('templates/tab-sms-modal.html', {
@@ -216,6 +222,9 @@ angular.module('starter.controllers', [])
 
               //si le téléphone supporte l'option Parametres > Securité > SMS alors on ne slide pas les contacts, on envoi directement tous les SMS !!!
               if ($rootScope.SmsSecurityOptionEnable) {
+
+                //On affiche un message d'attente..
+                $rootScope.showSendingSMSOverlay();
 
                 ContactsManager.getAllContactASM()
                   .then(SmsManager.getUniquePhoneNumber)
@@ -277,7 +286,7 @@ angular.module('starter.controllers', [])
           $scope.initFields();
           $rootScope.displayToast($scope.countSMS + ' ont été envoyés !');
         }
-      }, 30000, phoneNumbersArray.length);
+      }, 60000, phoneNumbersArray.length);
 
     };
 
