@@ -5,23 +5,23 @@
     <ion-list>
 
       <ion-toggle ng-model="settings.enableContact">
-        Activer Administration
+        <strong>Activer Administration</strong>
       </ion-toggle>
 
       <ion-item>
         <!--MT -->
-        <button class="button button-block button-positive icon-left ion-android-person-add"
+        <button class="button button-full button-raised button-positive ink icon-left ion-android-person-add"
                 ng-click="importContacts()"
                 ng-disabled="isDisabledImport()">
-          Importer les contacts ASM
+          {{buttonImportText}}
         </button>
       </ion-item>
 
       <ion-item>
-        <button class="button button-block icon-left ion-ios-trash-outline button-positive"
+        <button class="button button-full button-raised button-positive ink icon-left ion-ios-trash-outline"
                 ng-click="removeContacts()"
                 ng-disabled="isDisabledDelete()">
-          Supprimer les contacts ASM
+          {{buttonDeleteText}}
         </button>
       </ion-item>
 

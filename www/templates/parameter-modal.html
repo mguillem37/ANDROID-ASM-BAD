@@ -16,7 +16,7 @@
     <ion-list>
 
       <ion-toggle ng-model="settings.SmsSecurityOptionEnable" ng-change="saveSettings()">
-        {{settings.SmsSecurityOptionEnable ? "Activée" : "Désactivée"}}
+        <strong>{{settings.SmsSecurityOptionEnable ? "Activée" : "Désactivée"}}</strong>
       </ion-toggle>
 
       <!-- li class="item item-toggle">

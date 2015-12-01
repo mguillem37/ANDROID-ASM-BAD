@@ -5,20 +5,17 @@
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
 
   <!-- Allow XHRs via https only -->
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https:">
+  <!--meta http-equiv="Content-Security-Policy" content="default-src 'self' https:"-->
 
   <title></title>
+  <link rel="stylesheet" href="lib/robotodraft/robotodraft.css" type="text/css" />
 
   <link href="lib/ionic/css/ionic.css" rel="stylesheet">
-  <!-- link href="lib/ionic-material/dist/ionic.material.min.css" rel="stylesheet"-->
+  <link href="lib/ionic-material/dist/ionic.material.min.css" rel="stylesheet">
   <link href="css/style.css" rel="stylesheet">
 
   <script src="lib/ionic/js/ionic.bundle.js"></script>
-  <!--script src="lib/ionic-material/dist/ionic.material.min.js"></script-->
-
-  <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
-<link href="css/ionic.app.css" rel="stylesheet">
--->
+  <script src="lib/ionic-material/dist/ionic.material.min.js"></script>
 
   <script src="lib/ngCordova/dist/ng-cordova.js"></script>
   <script src="cordova.js"></script>
@@ -28,6 +25,7 @@
   <script src="js/controllers.js"></script>
   <script src="js/services.js"></script>
 </head>
+
 <body ng-app="starter">
 
 <!--
@@ -38,11 +36,13 @@
 
   <ion-side-menu side="left" expose-aside-when="large" ng-cloak>
 
-    <ion-header-bar class="bar-energized">
-      <h1 class="title">Menu</h1>
+    <ion-header-bar class="bar-calm-900 expanded">
+      <!-- h1 class="title">Menu</h1 -->
+      <span class="avatar motion spin fade" style="background: url('img/drawable-xxxhdpi-icon.png'); background-size: cover;"></span>
+      <h2>Menu</h2>
     </ion-header-bar>
 
-    <ion-content>
+    <ion-content class="has-expanded-header">
       <ion-list>
         <ion-item class="item-icon-left" nav-clear menu-close href="#/tab/sms">
           <i class="icon ion-chatbox-working"></i> Envoyer SMS
@@ -55,7 +55,7 @@
 
     </ion-content>
 
-    <ion-footer-bar class="bar-energized force-footer-bar-heigth" align-title="left">
+    <ion-footer-bar class="bar-calm-900 force-footer-bar-heigth expanded" align-title="left">
       <ul>
         <li><i class="icon ion-social-android"></i> {{myDevice}}</li>
         <li><i class="icon ion-grid"></i> {{versionNumber}} - {{versionCode}}</li>
@@ -69,7 +69,7 @@
     <!--
         The nav bar that will be updated as we navigate between views.
       -->
-    <ion-nav-bar class="bar-positive">
+    <ion-nav-bar class="bar-calm-900">
 
       <ion-nav-back-button>
       </ion-nav-back-button>

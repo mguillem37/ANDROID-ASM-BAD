@@ -9,12 +9,14 @@ angular.module('starter.services', [])
       //On parcourt une premiere fois la liste des contacts pour générer une liste des numéros de téléphones des contacts ASM
       angular.forEach(contacts, function (contact, index) {
           if (contact.phoneNumbers && contact.phoneNumbers !== null && contact.phoneNumbers !== "" && contact.phoneNumbers.length > 0) {
-            contact.phoneNumbers.foreach(function (aPhone) {
+            var aPhone;
+            for (i=0; i<contact.phoneNumbers.length; i++) {
+              aPhone = contact.phoneNumbers[i];
               if (aPhone.type === "mobile") {
                 telephoneNumber = aPhone.value.split(" ").join("");
                 phoneNumbers.push(telephoneNumber);
               }
-            });
+            }
           }
         }
       );

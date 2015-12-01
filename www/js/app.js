@@ -5,10 +5,20 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova', 'ionic-material'])
 
   .run(['$ionicPlatform', '$ionicLoading', '$log', '$cordovaNetwork', '$cordovaSplashscreen', '$cordovaAppVersion', '$cordovaDevice', '$cordovaStatusbar', 'ContactsManager', 'LocalStorageAPI', '$rootScope', 'ToastManager',
     function ($ionicPlatform, $ionicLoading, $log, $cordovaNetwork, $cordovaSplashscreen, $cordovaAppVersion, $cordovaDevice, $cordovaStatusbar, ContactsManager, LocalStorageAPI, $rootScope, ToastManager) {
+
+      function initDisplay() {
+        if ($rootScope.orientation === "P") {
+          $rootScope.buttonImportText ="Importer...";
+          $rootScope.buttonDeleteText ="Supprimer...";
+        } else {
+          $rootScope.buttonImportText = "Importer les contacts ASM";
+          $rootScope.buttonDeleteText = "Supprimer les contacts ASM";
+        }
+      };
 
       $ionicPlatform.ready(function () {
 
@@ -33,6 +43,20 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         $rootScope.$on('$cordovaNetwork:offline', function (event, networkState) {
           $rootScope.networkOnLine = false;
         });
+
+        // initialisation des variables avant mle premier évènement
+        if (screen.orientation) {
+          $rootScope.orientation = screen.orientation.type.substring(0, 1).toUpperCase();
+          initDisplay();
+        }
+        window.addEventListener("orientationchange", function(){
+          $rootScope.orientation = screen.orientation.type.substring(0,1).toUpperCase();
+          initDisplay();
+        });
+
+        $rootScope.isPortrait = function() {
+          return  $rootScope.orientation === "P";
+        }
 
         /** Méthodes utilitaires Globales */
 
@@ -159,7 +183,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       .state('tab', {
         url: '/tab',
         abstract: true,
-        templateUrl: 'templates/tabs.html'
+        templateUrl: 'templates/tabs.html',
+        controller : 'TabCtrl',
       })
 
       // Each tab has its own nav history stack:
