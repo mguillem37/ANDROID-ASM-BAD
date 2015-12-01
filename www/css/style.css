@@ -1,5 +1,22 @@
 /* Empty. Add your own CSS if you like */
 
+@media screen and (max-height:350px) {
+
+  .force-footer-bar-heigth {
+    display: none;
+    width: 0%;
+  }
+}
+
+.force-vertical-align {
+  vertical-align: middle !important;
+}
+
+.item-stacked-label textarea {
+  border-bottom-style: solid;
+  border-bottom-color: #387ef5;
+}
+
 .force-footer-bar-heigth {
   height: 110px !important;
   color: white;

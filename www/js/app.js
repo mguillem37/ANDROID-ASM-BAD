@@ -10,6 +10,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   .run(['$ionicPlatform', '$ionicLoading', '$log', '$cordovaNetwork', '$cordovaSplashscreen', '$cordovaAppVersion', '$cordovaDevice', '$cordovaStatusbar', 'ContactsManager', 'LocalStorageAPI', '$rootScope', 'ToastManager',
     function ($ionicPlatform, $ionicLoading, $log, $cordovaNetwork, $cordovaSplashscreen, $cordovaAppVersion, $cordovaDevice, $cordovaStatusbar, ContactsManager, LocalStorageAPI, $rootScope, ToastManager) {
 
+      function initDisplay() {
+        if ($rootScope.orientation === "P") {
+          $rootScope.buttonImportText ="Importer...";
+          $rootScope.buttonDeleteText ="Supprimer...";
+        } else {
+          $rootScope.buttonImportText = "Importer les contacts ASM";
+          $rootScope.buttonDeleteText = "Supprimer les contacts ASM";
+        }
+      };
+
       $ionicPlatform.ready(function () {
 
         //alert('ionic ready !')
@@ -35,21 +45,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         });
 
         // initialisation des variables avant mle premier évènement
-        $rootScope.orientation = "portrait";
-        $rootScope.buttonImportText ="Importer...";
-        $rootScope.buttonDeleteText ="Supprimer...";
-
+        if (screen.orientation) {
+          $rootScope.orientation = screen.orientation.type.substring(0, 1).toUpperCase();
+          initDisplay();
+        }
         window.addEventListener("orientationchange", function(){
-          $rootScope.orientation = screen.orientation.type;
-          if ($rootScope.orientation && $rootScope.orientation.substring(0,1).toUpperCase() === "P") {
-            $rootScope.buttonImportText ="Importer...";
-            $rootScope.buttonDeleteText ="Supprimer...";
-          } else {
-            $rootScope.buttonImportText = "Importer les contacts ASM";
-            $rootScope.buttonDeleteText = "Supprimer les contacts ASM";
-          }
-
+          $rootScope.orientation = screen.orientation.type.substring(0,1).toUpperCase();
+          initDisplay();
         });
+
+        $rootScope.isPortrait = function() {
+          return  $rootScope.orientation === "P";
+        }
 
         /** Méthodes utilitaires Globales */
 

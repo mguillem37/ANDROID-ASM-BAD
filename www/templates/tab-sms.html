@@ -9,21 +9,42 @@
 
     <ion-list show-delete="false" show-reorder="false" can-swipe="false">
 
-      <li class="item item-checkbox">
+      <div class="row" ng-if="! isPortrait()">
+        <div class="col col-center">
+          <label class="checkbox force-vertical-align">
+            <input type="checkbox" ng-model="form.isBureau" ng-disabled="countContactsASM===0"
+                   ng-click="changeAdherentStateIfIsMember()">
+          </label><strong>Bureau ({{membersASM.length}})</strong>
+        </div>
+        <div class="col col-center">
+          <label class="checkbox force-vertical-align">
+            <input type="checkbox" ng-model="form.isMinibad" ng-disabled="countContactsASM===0"
+                   ng-click="changeAdherentStateIfIsMinibad()">
+          </label><strong>Minibad ({{countMinibadASM}})</strong>
+        </div>
+        <div class="col col-center">
+          <label class="checkbox force-vertical-align">
+            <input type="checkbox" ng-model="form.isAdherent" ng-disabled="countContactsASM===0"
+                   ng-click="changeBureauState()">
+          </label><strong>Adhérents ({{countContactsASM}})</strong>
+        </div>
+      </div>
+
+      <li class="item item-checkbox" ng-if="isPortrait()">
         <label class="checkbox">
           <input type="checkbox" ng-model="form.isBureau" ng-disabled="countContactsASM===0"
                  ng-click="changeAdherentStateIfIsMember()">
         </label><strong>Bureau ({{membersASM.length}})</strong>
       </li>
 
-      <li class="item item-checkbox">
+      <li class="item item-checkbox" ng-if="isPortrait()">
         <label class="checkbox">
           <input type="checkbox" ng-model="form.isMinibad" ng-disabled="countContactsASM===0"
                  ng-click="changeAdherentStateIfIsMinibad()">
         </label><strong>Minibad ({{countMinibadASM}})</strong>
       </li>
 
-      <li class="item item-checkbox">
+      <li class="item item-checkbox" ng-if="isPortrait()">
         <label class="checkbox">
           <input type="checkbox" ng-model="form.isAdherent" ng-disabled="countContactsASM===0"
                  ng-click="changeBureauState()">
@@ -44,7 +65,8 @@
 
       <div class="item">
         <button ng-disabled="isButtonDisabled()" ng-click="sendSMS()"
-                class="button button-block button-raised button-positive ink">Envoyer le SMS <i class="icon ion-android-textsms"></i>
+                class="button button-block button-raised button-positive ink">Envoyer le SMS <i
+          class="icon ion-android-textsms"></i>
         </button>
       </div>
 

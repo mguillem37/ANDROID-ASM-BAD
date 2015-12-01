@@ -15,26 +15,32 @@ zipalign -v 4 platforms\android\bin\MainActivity-release-unsigned.apk ASMBad.apk
 -- Content Security Policy (CSP) http://content-securitypolicy.com/
 ----https://github.com/apache/cordova-plugin-whitelist#content-securitypolicy
 
-# v1.1.3
+# v1.1.3 EN COURS
 - Récupération de tous les mobiles d'un contact si plusieurs ont été enregistrés !
-- $cordovaStatusbar : ajout du plugin
-- modif gestion sélection/désélection checkbox envoi sms
-- correction bug : ajout Overlay lors de l'envoi des SMS aux adhérents
-- augmentation taille champ message SMS (255)
+- Ajout du plugin $cordovaStatusbar 
+- Modif gestion sélection/désélection checkbox envoi sms
+- Correction bug : ajout Overlay lors de l'envoi des SMS aux adhérents
+- Augmentation taille champ message SMS (255)
+- Import local police Robotodraft
 
 # v1.1.4
  bower install ion-md-input --save-dev
  bower install ionic-material --save-dev
+ bower install robotodraft --save 
  
 - Menu gauche : ajout avatar du club
 - Intégration Material Design
 - Détection orientation mobile
 
-- checkbox : à aligner si landscape
+- Page envoi SMS : aligner les checkbox si landscape
 - Intégration librairie ion-md-input
-- Afficher le nombre de contacts avec mobile (06 et 07) dans les stats
+
 
 # V1.1.5
 - Montée version ionic (ionic lib update)
-
+- Charger les contacts depuis firebase
+-- si modif, ajout, suppression
+-- prévoir une notification et un nouveau bouton
+- Ajouter une medai query pour cacher le footer du menu si hauteut trop juste
+- Afficher le nombre de contacts avec mobile (06 et 07) dans les stats
 
